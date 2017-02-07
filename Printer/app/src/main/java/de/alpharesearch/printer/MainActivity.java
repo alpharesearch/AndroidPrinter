@@ -27,12 +27,28 @@ public class MainActivity extends AppCompatActivity {
     public void Print(View v) {
 
         EditText editTextIP = (EditText) this.findViewById(R.id.editTextIP);
-        EditText editText_Size = (EditText) this.findViewById(R.id.editText_Size);
+        EditText editText_Measurement = (EditText) this.findViewById(R.id.editText_Size);
+        int measurement  = 0;
+        try {
+            measurement = Integer.parseInt(editText_Measurement.getText().toString());
+        }
+        catch(NumberFormatException nfe) {
+            Log.e("Print","trying to convert:"+editText_Measurement.getText().toString()+" to integer failed");
+            measurement  = 0;
+        }
         EditText editText_Servings = (EditText) this.findViewById(R.id.editText_Servings);
+        int servings  = 0;
+        try {
+            servings = Integer.parseInt(editText_Servings.getText().toString());
+        }
+        catch(NumberFormatException nfe) {
+            Log.e("Print","trying to convert:"+editText_Servings.getText().toString()+" to integer failed");
+            servings  = 1;
+        }
         EditText editText_Unit = (EditText) this.findViewById(R.id.editText_Unit);
         EditText editText_Comment = (EditText) this.findViewById(R.id.editText_Comment);
         TextView mTextView_Preview = (TextView) this.findViewById(R.id.textView_Preview);
-        String print_this = "Nutrinal Information\nServing Size: "+editText_Size.getText().toString()+"\nServings: "+editText_Servings.getText().toString()+"\nUnit: "+editText_Unit.getText().toString()+"\nCommnet: "+editText_Comment.getText().toString()+"\n\n\n";
+        String print_this = "\nPortion Information\nTotal measurement: "+Integer.toString(measurement)+editText_Unit.getText().toString()+"\nServings: "+Integer.toString(servings)+"\nPortion Size: "+Integer.toString((measurement/servings))+editText_Unit.getText().toString()+"\nCommnet: "+editText_Comment.getText().toString()+"\n\n\n";
 
         mTextView_Preview.setText(print_this);
         new ConnectTask().execute(editTextIP.getText().toString());
