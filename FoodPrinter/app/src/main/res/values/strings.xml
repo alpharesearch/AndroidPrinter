@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Printer</string>
+    <string name="app_name">Food Printer</string>
+    <string name="Print">Print</string>
+    <string name="Total_measurement">Total measurement</string>
+    <string name="Servings">Servings</string>
+    <string name="Unit">Unit</string>
+    <string name="Comment">Comment</string>
+    <string name="Enter_the_information_and_press_Print">Enter the information and press Print.</string>
 </resources>
