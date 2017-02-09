@@ -1,5 +1,7 @@
 package de.alpharesearch.printer;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.os.SystemClock;
@@ -28,7 +30,11 @@ public class MainActivity extends AppCompatActivity {
         // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
         TextView mTextView = (TextView)this.findViewById(R.id.textView_Preview);
-        mTextView.setText(R.string.Enter_the_information_and_press_Print);
+        mTextView.setText(R.string.Info_text);
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        EditText editTextIP = (EditText) this.findViewById(R.id.editTextIP);
+        editTextIP.setText(sharedPref.getString("IP", getResources().getString(R.string.defaultIP)));
 
     }
 
@@ -43,27 +49,32 @@ public class MainActivity extends AppCompatActivity {
     public boolean Print(MenuItem item) {
         EditText editTextIP = (EditText) this.findViewById(R.id.editTextIP);
         EditText editText_Measurement = (EditText) this.findViewById(R.id.editText_Size);
-        int measurement  = 0;
+        int measurement;
         try {
             measurement = Integer.parseInt(editText_Measurement.getText().toString());
         }
         catch(NumberFormatException nfe) {
-            Log.e(String.valueOf(R.string.Print),"trying to convert:"+editText_Measurement.getText().toString()+" to integer failed");
+            Log.e(String.valueOf(R.string.Save),"trying to convert:"+editText_Measurement.getText().toString()+" to integer failed");
             measurement  = 0;
         }
         EditText editText_Servings = (EditText) this.findViewById(R.id.editText_Servings);
-        int servings  = 0;
+        int servings;
         try {
             servings = Integer.parseInt(editText_Servings.getText().toString());
         }
         catch(NumberFormatException nfe) {
-            Log.e(String.valueOf(R.string.Print),"trying to convert:"+editText_Servings.getText().toString()+" to integer failed");
+            Log.e(String.valueOf(R.string.Save),"trying to convert:"+editText_Servings.getText().toString()+" to integer failed");
             servings  = 1;
         }
         EditText editText_Unit = (EditText) this.findViewById(R.id.editText_Unit);
         EditText editText_Comment = (EditText) this.findViewById(R.id.editText_Comment);
         TextView mTextView_Preview = (TextView) this.findViewById(R.id.textView_Preview);
-        String print_this = "\nPortion Information\nTotal measurement: "+Integer.toString(measurement)+editText_Unit.getText().toString()+"\nServings: "+Integer.toString(servings)+"\nPortion Size: "+Integer.toString((measurement/servings))+editText_Unit.getText().toString()+"\nCommnet: "+editText_Comment.getText().toString()+"\n\n\n";
+        String print_this = "\n\n"
+                +getString(R.string.Portion_Information)+"\n"
+                +getString(R.string.Total_measurement)+": "+Integer.toString(measurement)+editText_Unit.getText().toString()+"\n"
+                +getString(R.string.Servings)+": "+Integer.toString(servings)+"\n"
+                +getString(R.string.Portion_Size)+": "+Integer.toString((measurement/servings))+editText_Unit.getText().toString()+"\n"
+                +getString(R.string.Comment)+": "+editText_Comment.getText().toString()+"\n\n\n\n\n";
 
         mTextView_Preview.setText(print_this);
         new ConnectTask().execute(editTextIP.getText().toString());
@@ -78,42 +89,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void Print(View v) {
-
+    public void SaveIP(View v) {
         EditText editTextIP = (EditText) this.findViewById(R.id.editTextIP);
-        EditText editText_Measurement = (EditText) this.findViewById(R.id.editText_Size);
-        int measurement  = 0;
-        try {
-            measurement = Integer.parseInt(editText_Measurement.getText().toString());
-        }
-        catch(NumberFormatException nfe) {
-            Log.e(String.valueOf(R.string.Print),"trying to convert:"+editText_Measurement.getText().toString()+" to integer failed");
-            measurement  = 0;
-        }
-        EditText editText_Servings = (EditText) this.findViewById(R.id.editText_Servings);
-        int servings  = 0;
-        try {
-            servings = Integer.parseInt(editText_Servings.getText().toString());
-        }
-        catch(NumberFormatException nfe) {
-            Log.e(String.valueOf(R.string.Print),"trying to convert:"+editText_Servings.getText().toString()+" to integer failed");
-            servings  = 1;
-        }
-        EditText editText_Unit = (EditText) this.findViewById(R.id.editText_Unit);
-        EditText editText_Comment = (EditText) this.findViewById(R.id.editText_Comment);
-        TextView mTextView_Preview = (TextView) this.findViewById(R.id.textView_Preview);
-        String print_this = "\nPortion Information\nTotal measurement: "+Integer.toString(measurement)+editText_Unit.getText().toString()+"\nServings: "+Integer.toString(servings)+"\nPortion Size: "+Integer.toString((measurement/servings))+editText_Unit.getText().toString()+"\nCommnet: "+editText_Comment.getText().toString()+"\n\n\n";
-
-        mTextView_Preview.setText(print_this);
-        new ConnectTask().execute(editTextIP.getText().toString());
-        SystemClock.sleep(1000);
-        if (mTcpClient != null) {
-            mTcpClient.sendMessage(print_this);
-        }
-        SystemClock.sleep(1000);
-        if (mTcpClient != null) {
-            mTcpClient.stopClient();
-        }
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("IP",editTextIP.getText().toString());
+        editor.commit();
     }
 
     public class ConnectTask extends AsyncTask<String, String, TcpClient> {

@@ -4,7 +4,7 @@
     <item
         android:id="@+id/miProfile"
         app:showAsAction="ifRoom|withText"
-        android:title="@string/Print"
+        android:title="@string/Save"
         android:visible="true"
         android:enabled="true"
         android:checkable="false"

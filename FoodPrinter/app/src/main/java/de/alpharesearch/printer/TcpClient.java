@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by markus on 2/6/17.
@@ -51,7 +53,7 @@ public class TcpClient {
     public void sendMessage(String message) {
         Log.e("TCP Client", "C: Sending..."+message);
         if (mBufferOut != null && !mBufferOut.checkError()) {
-            mBufferOut.println(message);
+            mBufferOut.println(message.getBytes(Charset.forName("US-ASCII")));
             mBufferOut.flush();
         }
     }

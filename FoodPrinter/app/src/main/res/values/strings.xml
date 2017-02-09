@@ -1,9 +1,12 @@
 <resources>
-    <string name="app_name">Food Printer</string>
-    <string name="Print">Print</string>
+    <string name="app_name">Food Portion Printer</string>
+    <string name="Save">Save</string>
     <string name="Total_measurement">Total measurement</string>
     <string name="Servings">Servings</string>
     <string name="Unit">Unit</string>
     <string name="Comment">Comment</string>
-    <string name="Enter_the_information_and_press_Print">Enter the information and press Print.</string>
+    <string name="Info_text">\n\nEnter the information and press the top arrow to Print.</string>
+    <string name="Portion_Information">Portion Information</string>
+    <string name="Portion_Size">Portion Size</string>
+    <string name="defaultIP" translatable="false">192.168.29.124:9100</string>
 </resources>
