@@ -53,7 +53,7 @@ public class TcpClient {
     public void sendMessage(String message) {
         Log.e("TCP Client", "C: Sending..."+message);
         if (mBufferOut != null && !mBufferOut.checkError()) {
-            mBufferOut.println(message.getBytes(Charset.forName("US-ASCII")));
+            mBufferOut.println(message);
             mBufferOut.flush();
         }
     }
