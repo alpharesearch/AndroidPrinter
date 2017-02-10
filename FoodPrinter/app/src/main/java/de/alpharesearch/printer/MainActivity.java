@@ -77,11 +77,13 @@ public class MainActivity extends AppCompatActivity {
                 +"║"+Mtext(" ","",30)+"║\n"
                 +"║"+getString(R.string.Portion_Information)+Mtext(".","",30-getString(R.string.Portion_Information).length())+"║\n"
                 +"╟"+Mtext("─","",30)+"╢\n"
-                +"║"+getString(R.string.Total_measurement)+": "+Mtext(".","",30-getString(R.string.Total_measurement).length()-Integer.toString(measurement).length()-editText_Unit.getText().toString().length())+Integer.toString(measurement)+editText_Unit.getText().toString()+"║\n"
-                +"║"+getString(R.string.Servings)+": "+Integer.toString(servings)+"║\n"
-                +"║"+getString(R.string.Portion_Size)+": "+Integer.toString((measurement/servings))+editText_Unit.getText().toString()+"║\n"
-                +"║"+getString(R.string.Comment)+": "+editText_Comment.getText().toString()+"║\n"
-                +"╚"+Mtext("═","",30)+"╝\n"+"\n\n\n\n\n";
+                +"║"+getString(R.string.Total_measurement)+":"+Mtext(".","",29-getString(R.string.Total_measurement).length()-Integer.toString(measurement).length()-editText_Unit.getText().toString().length())+Integer.toString(measurement)+editText_Unit.getText().toString()+"║\n"
+                +"║"+getString(R.string.Servings)+":"+Mtext(".",Integer.toString(servings),29-getString(R.string.Servings).length())+"║\n"
+                +"║"+getString(R.string.Portion_Size)+":"+Mtext(".","",29-getString(R.string.Portion_Size).length()-Integer.toString(measurement/servings).length()-editText_Unit.getText().toString().length())+Integer.toString((measurement/servings))+editText_Unit.getText().toString()+"║\n"
+                +"╚"+Mtext("═","",30)+"╝\n"
+                +""+getString(R.string.Comment)+": "+editText_Comment.getText().toString()+"\n"
+                +"\n\n\n\n\n";
+
 
         mTextView_Preview.setText(print_this.toString());
         new ConnectTask().execute(editTextIP.getText().toString());
