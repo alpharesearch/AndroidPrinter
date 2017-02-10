@@ -1,10 +1,14 @@
 package de.alpharesearch.printer;
 
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -12,6 +16,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+
+import static android.util.Base64.decode;
 
 /**
  * Created by markus on 2/6/17.
@@ -28,7 +34,7 @@ public class TcpClient {
     // while this is true, the server will continue running
     private boolean mRun = false;
     // used to send messages
-    private PrintWriter mBufferOut;
+    private OutputStream mBufferOut;
     // used to read messages from the server
     private BufferedReader mBufferIn;
 
@@ -52,9 +58,17 @@ public class TcpClient {
      */
     public void sendMessage(String message) {
         Log.e("TCP Client", "C: Sending..."+message);
-        if (mBufferOut != null && !mBufferOut.checkError()) {
-            mBufferOut.println(message);
-            mBufferOut.flush();
+        if (mBufferOut != null) {
+            byte[] buf = message.getBytes(Charset.forName("IBM-437"));
+            try {
+                mBufferOut.write(buf);
+                mBufferOut.flush();
+            }
+            catch (Exception e) {
+
+                Log.e("TCP", "C: Error", e);
+
+            }
         }
     }
 
@@ -66,10 +80,15 @@ public class TcpClient {
         mRun = false;
 
         if (mBufferOut != null) {
-            mBufferOut.flush();
-            mBufferOut.close();
-        }
+            try {
+                mBufferOut.flush();
+                mBufferOut.close();
+            } catch (Exception e) {
 
+                Log.e("TCP", "C: Error", e);
+
+            }
+        }
         mMessageListener = null;
         mBufferIn = null;
         mBufferOut = null;
@@ -77,7 +96,7 @@ public class TcpClient {
         Log.e("TCP Client", "C: Closed...");
     }
 
-    public void run() {
+    public void run(){
 
         mRun = true;
 
@@ -95,7 +114,7 @@ public class TcpClient {
             try {
 
                 //sends the message to the server
-                mBufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+                mBufferOut = socket.getOutputStream();
 
                 //receives the message which the server sends back
                 mBufferIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
