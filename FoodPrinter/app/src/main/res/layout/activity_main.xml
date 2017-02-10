@@ -77,7 +77,10 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:textAlignment="center"
-            android:layout_below="@+id/editText_Comment" />
+            android:layout_below="@+id/editText_Comment"
+            android:typeface="monospace"
+            android:textSize="14sp"
+            android:fontFamily="monospace" />
 
         <TextView
             android:text="@string/Total_measurement"

@@ -72,14 +72,18 @@ public class MainActivity extends AppCompatActivity {
         EditText editText_Comment = (EditText) this.findViewById(R.id.editText_Comment);
         TextView mTextView_Preview = (TextView) this.findViewById(R.id.textView_Preview);
 
-        String print_this = "\n\n"+String.valueOf((char) 253)
-                +getString(R.string.Portion_Information)+"\n"
-                +getString(R.string.Total_measurement)+": "+Integer.toString(measurement)+editText_Unit.getText().toString()+"\n"
-                +getString(R.string.Servings)+": "+Integer.toString(servings)+"\n"
-                +getString(R.string.Portion_Size)+": "+Integer.toString((measurement/servings))+editText_Unit.getText().toString()+"\n"
-                +getString(R.string.Comment)+": "+editText_Comment.getText().toString()+"\n\n\n\n\n";
+        String print_this = "\n\n"
+                +"╔"+Mtext("═","",30)+"╗\n"
+                +"║"+Mtext(" ","",30)+"║\n"
+                +"║"+getString(R.string.Portion_Information)+Mtext(".","",30-getString(R.string.Portion_Information).length())+"║\n"
+                +"╟"+Mtext("─","",30)+"╢\n"
+                +"║"+getString(R.string.Total_measurement)+": "+Mtext(".","",30-getString(R.string.Total_measurement).length()-Integer.toString(measurement).length()-editText_Unit.getText().toString().length())+Integer.toString(measurement)+editText_Unit.getText().toString()+"║\n"
+                +"║"+getString(R.string.Servings)+": "+Integer.toString(servings)+"║\n"
+                +"║"+getString(R.string.Portion_Size)+": "+Integer.toString((measurement/servings))+editText_Unit.getText().toString()+"║\n"
+                +"║"+getString(R.string.Comment)+": "+editText_Comment.getText().toString()+"║\n"
+                +"╚"+Mtext("═","",30)+"╝\n"+"\n\n\n\n\n";
 
-        mTextView_Preview.setText(print_this);
+        mTextView_Preview.setText(print_this.toString());
         new ConnectTask().execute(editTextIP.getText().toString());
         SystemClock.sleep(1000);
 
@@ -91,6 +95,17 @@ public class MainActivity extends AppCompatActivity {
             mTcpClient.stopClient();
         }
         return true;
+    }
+
+    private String Mtext(String A, String B, int L) {
+
+        String buf="";
+        L = L - B.length();
+        for(int i=0; i!=L;i++) {
+            buf = buf + A;
+        }
+        buf = buf + B;
+        return buf;
     }
 
     public void SaveIP(View v) {
