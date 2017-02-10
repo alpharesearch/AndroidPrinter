@@ -5,8 +5,9 @@
     <string name="Servings">Servings</string>
     <string name="Unit">Unit</string>
     <string name="Comment">Comment</string>
-    <string name="Info_text">\n\nEnter the information and press the top arrow to Print.</string>
+    <string name="Info_text">\n\nEnter the information and press the print button on top.</string>
     <string name="Portion_Information">Portion Information</string>
     <string name="Portion_Size">Portion Size</string>
     <string name="defaultIP" translatable="false">192.168.29.124:9100</string>
+    <string name="Print">Print</string>
 </resources>

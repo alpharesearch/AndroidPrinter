@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.EditText;
 
+import java.nio.charset.Charset;
+
 public class MainActivity extends AppCompatActivity {
     TcpClient mTcpClient;
 
@@ -69,13 +71,21 @@ public class MainActivity extends AppCompatActivity {
         EditText editText_Unit = (EditText) this.findViewById(R.id.editText_Unit);
         EditText editText_Comment = (EditText) this.findViewById(R.id.editText_Comment);
         TextView mTextView_Preview = (TextView) this.findViewById(R.id.textView_Preview);
+
+        String headPhoneString = "";
+        for(int i =30; i!=254; i++){
+            headPhoneString = headPhoneString + String.valueOf(i)+ " "  + new String(Character.toChars(i))+ " " ;
+        }
         String print_this = "\n\n"
                 +getString(R.string.Portion_Information)+"\n"
                 +getString(R.string.Total_measurement)+": "+Integer.toString(measurement)+editText_Unit.getText().toString()+"\n"
                 +getString(R.string.Servings)+": "+Integer.toString(servings)+"\n"
                 +getString(R.string.Portion_Size)+": "+Integer.toString((measurement/servings))+editText_Unit.getText().toString()+"\n"
-                +getString(R.string.Comment)+": "+editText_Comment.getText().toString()+"\n\n\n\n\n";
+                +getString(R.string.Comment)+": "+editText_Comment.getText().toString()+"\n\n\n\n\n"+headPhoneString;
 
+
+
+        byte[] test = "☺".getBytes(Charset.forName("IBM-437"));
         mTextView_Preview.setText(print_this);
         new ConnectTask().execute(editTextIP.getText().toString());
         SystemClock.sleep(1000);

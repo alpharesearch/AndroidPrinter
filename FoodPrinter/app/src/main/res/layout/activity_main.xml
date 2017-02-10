@@ -5,14 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:elevation="2dp">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:minHeight="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary">
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
     </android.support.v7.widget.Toolbar>
 
     <RelativeLayout
@@ -71,7 +73,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:id="@+id/textView_Preview"
-            android:layout_above="@+id/button1"
+            android:layout_above="@+id/button_save"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:textAlignment="center"
@@ -113,7 +115,7 @@
             android:text="@string/Save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button1"
+            android:id="@+id/button_save"
             android:elevation="1dp"
             android:onClick="SaveIP"
             android:layout_alignParentBottom="true"
@@ -130,13 +132,13 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/button1"
-            android:layout_toLeftOf="@+id/button1" />
+            android:layout_toStartOf="@+id/button_save"
+            android:layout_toLeftOf="@+id/button_save" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
+            android:inputType="text|textMultiLine"
             android:ems="10"
             android:layout_below="@+id/editText_Unit"
             android:layout_alignLeft="@+id/editText_Unit"

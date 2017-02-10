@@ -3,10 +3,11 @@
     <string name="app_name">Food Portion Printer</string>
     <string name="Unit">Einheit</string>
     <string name="Comment">Kommentar</string>
-    <string name="Info_text">\n\nGeben Sie die Werte ein und danch drücken Sie den Pfeil oben zum Drucken.</string>
+    <string name="Info_text">\n\nGeben Sie die Werte ein und danch drücken Sie den Druckknopf oben.</string>
     <string name="Portion_Information">Informationen zur Portion</string>
     <string name="Save">Speichern</string>
     <string name="Servings">Portionen</string>
     <string name="Total_measurement">Gesamte Messung</string>
     <string name="Portion_Size">Eine Portion</string>
+    <string name="Print">Drucken</string>
 </resources>
