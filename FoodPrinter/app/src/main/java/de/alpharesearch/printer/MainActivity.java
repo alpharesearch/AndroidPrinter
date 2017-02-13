@@ -15,8 +15,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.EditText;
 
-import java.nio.charset.Charset;
-
 public class MainActivity extends AppCompatActivity {
     TcpClient mTcpClient;
 
@@ -68,23 +66,25 @@ public class MainActivity extends AppCompatActivity {
             Log.e(String.valueOf(R.string.Save),"trying to convert:"+editText_Servings.getText().toString()+" to integer failed");
             servings  = 1;
         }
+        EditText editText_Dish = (EditText) this.findViewById(R.id.editTextName);
         EditText editText_Unit = (EditText) this.findViewById(R.id.editText_Unit);
         EditText editText_Comment = (EditText) this.findViewById(R.id.editText_Comment);
         TextView mTextView_Preview = (TextView) this.findViewById(R.id.textView_Preview);
-
+        String dish_name = editText_Dish.getText().toString();
+        if (dish_name.length()== 0)dish_name = getString(R.string.Portion_Information);
         String print_this = "\n"
-                +"┌"+Mtext("─","",30)+"┐\n"
-                +"│"+Mtext(" ","",30)+"│\n"
-                +"│"+getString(R.string.Portion_Information)+Mtext(" ","",30-getString(R.string.Portion_Information).length())+"│\n"
-                +"│"+Mtext(" ","",30)+"│\n"
-                +"├"+Mtext("─","",30)+"┤\n"
-                +"│ "+getString(R.string.Total_measurement)+":"+Mtext(" ","",27-getString(R.string.Total_measurement).length()-Integer.toString(measurement).length()-editText_Unit.getText().toString().length())+Integer.toString(measurement)+editText_Unit.getText().toString()+" │\n"
-                +"├"+Mtext("─","",30)+"┤\n"
-                +"│ "+getString(R.string.Servings)+":"+Mtext(" ",Integer.toString(servings),27-getString(R.string.Servings).length())+" │\n"
-                +"├"+Mtext("─","",30)+"┤\n"
-                +"│ "+getString(R.string.Portion_Size)+":"+Mtext(" ","",27-getString(R.string.Portion_Size).length()-Integer.toString(measurement/servings).length()-editText_Unit.getText().toString().length())+Integer.toString((measurement/servings))+editText_Unit.getText().toString()+" │\n"
-                +"└"+Mtext("─","",30)+"┘\n"
-                +""+getString(R.string.Comment)+": "+editText_Comment.getText().toString()+"\n"
+                +"┌"+ MtextL("─","",30)+"┐\n"
+                +"│"+ MtextL(" ","",30)+"│\n"
+                +"│"+ MtextR(" ", dish_name,30)+"│\n"
+                +"│"+ MtextL(" ","",30)+"│\n"
+                +"├"+ MtextL("─","",30)+"┤\n"
+                +"│ "+getString(R.string.Total_measurement)+":"+ MtextL(" ",Integer.toString(measurement)+editText_Unit.getText().toString(),27-getString(R.string.Total_measurement).length())+" │\n"
+                +"├"+ MtextL("─","",30)+"┤\n"
+                +"│ "+getString(R.string.Servings)+":"+ MtextL(" ",Integer.toString(servings),27-getString(R.string.Servings).length())+" │\n"
+                +"├"+ MtextL("─","",30)+"┤\n"
+                +"│ "+getString(R.string.Portion_Size)+":"+ MtextL(" ","",27-getString(R.string.Portion_Size).length()-Integer.toString(measurement/servings).length()-editText_Unit.getText().toString().length())+Integer.toString((measurement/servings))+editText_Unit.getText().toString()+" │\n"
+                +"└"+ MtextL("─","",30)+"┘\n"
+                +""+getString(R.string.Comment)+":\n"+editText_Comment.getText().toString()+"\n"
                 +"\n\n\n\n\n\n";
 
 
@@ -102,14 +102,27 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private String Mtext(String A, String B, int L) {
+    private String MtextL(String A, String B, int L) {
 
         String buf="";
         L = L - B.length();
+        if (L<0) L=0;
         for(int i=0; i!=L;i++) {
             buf = buf + A;
         }
         buf = buf + B;
+        return buf;
+    }
+
+    private String MtextR(String A, String B, int L) {
+
+        String buf="";
+        L = L - B.length();
+        if (L<0) L=0;
+        buf = buf + B;
+        for(int i=0; i!=L;i++) {
+            buf = buf + A;
+        }
         return buf;
     }
 

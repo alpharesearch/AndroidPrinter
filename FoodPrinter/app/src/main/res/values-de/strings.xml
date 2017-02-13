@@ -10,4 +10,5 @@
     <string name="Total_measurement">Gesamte Messung</string>
     <string name="Portion_Size">Eine Portion</string>
     <string name="Print">Drucken</string>
+    <string name="Name">Gericht</string>
 </resources>

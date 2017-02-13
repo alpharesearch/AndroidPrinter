@@ -10,4 +10,5 @@
     <string name="Portion_Size">Portion Size</string>
     <string name="defaultIP" translatable="false">192.168.29.124:9100</string>
     <string name="Print">Print</string>
+    <string name="Name">Dish</string>
 </resources>
