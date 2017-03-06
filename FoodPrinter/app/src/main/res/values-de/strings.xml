@@ -11,4 +11,5 @@
     <string name="Portion_Size">Eine Portion</string>
     <string name="Print">Drucken</string>
     <string name="Name">Gericht</string>
+    <string name="Date">Datum:</string>
 </resources>

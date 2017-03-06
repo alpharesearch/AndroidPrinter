@@ -15,6 +15,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.EditText;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 public class MainActivity extends AppCompatActivity {
     TcpClient mTcpClient;
 
@@ -72,11 +76,15 @@ public class MainActivity extends AppCompatActivity {
         TextView mTextView_Preview = (TextView) this.findViewById(R.id.textView_Preview);
         String dish_name = editText_Dish.getText().toString();
         if (dish_name.length()== 0)dish_name = getString(R.string.Portion_Information);
+        Date trialTime = new Date();
+        SimpleDateFormat postFormater = new SimpleDateFormat("MMMM dd, yyyy");
         String print_this = "\n"
                 +"┌"+ MtextL("─","",30)+"┐\n"
                 +"│"+ MtextL(" ","",30)+"│\n"
                 +"│"+ MtextR(" ", dish_name,30)+"│\n"
                 +"│"+ MtextL(" ","",30)+"│\n"
+                +"├"+ MtextL("─","",30)+"┤\n"
+                +"│ "+getString(R.string.Date)+ MtextL(" ",postFormater.format(trialTime),28-getString(R.string.Date).length())+" │\n"
                 +"├"+ MtextL("─","",30)+"┤\n"
                 +"│ "+getString(R.string.Total_measurement)+":"+ MtextL(" ",Integer.toString(measurement)+editText_Unit.getText().toString(),27-getString(R.string.Total_measurement).length())+" │\n"
                 +"├"+ MtextL("─","",30)+"┤\n"
