@@ -25,7 +25,7 @@ import static android.util.Base64.decode;
 
 public class TcpClient {
 
-    private String mSERVER_IP = "192.168.29.124"; //server IP address
+    private String mSERVER_IP = "192.168.29.202"; //server IP address
     private int mSERVER_PORT = 9100;
     // message to send to the server
     private String mServerMessage;
