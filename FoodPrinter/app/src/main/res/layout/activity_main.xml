@@ -65,6 +65,7 @@
             android:layout_above="@+id/button_save"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:gravity="center"
             android:textAlignment="center"
             android:textSize="14sp"
             android:elevation="1dp"
