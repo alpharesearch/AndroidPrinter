@@ -37,6 +37,7 @@ public class TcpClient {
     private OutputStream mBufferOut;
     // used to read messages from the server
     private BufferedReader mBufferIn;
+    private Socket socket;
 
     /**
      * Constructor of the class. OnMessagedReceived listens for the messages received from server
@@ -57,14 +58,13 @@ public class TcpClient {
      * @param message text entered by client
      */
     public void sendMessage(String message) {
-        Log.e("TCP Client", "C: Sending..."+message);
+        Log.e("TCP Client", "C: Sending..." + message);
         if (mBufferOut != null) {
             byte[] buf = message.getBytes(Charset.forName("IBM-437"));
             try {
                 mBufferOut.write(buf);
                 mBufferOut.flush();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
 
                 Log.e("TCP", "C: Error", e);
 
@@ -89,6 +89,13 @@ public class TcpClient {
 
             }
         }
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                Log.e("TCP", "C: Error closing socket", e);
+            }
+        }
         mMessageListener = null;
         mBufferIn = null;
         mBufferOut = null;
@@ -96,59 +103,38 @@ public class TcpClient {
         Log.e("TCP Client", "C: Closed...");
     }
 
-    public void run(){
-
+    public void connect() throws Exception {
         mRun = true;
 
-        try {
-            //here you must put your computer's IP address.
-            InetAddress serverAddr = InetAddress.getByName(mSERVER_IP);
+        InetAddress serverAddr = InetAddress.getByName(mSERVER_IP);
 
-            Log.e("TCP Client", "C: Connecting..."+ mSERVER_IP +":"+ mSERVER_PORT);
+        Log.e("TCP Client", "C: Connecting..." + mSERVER_IP + ":" + mSERVER_PORT);
 
-            //create a socket to make the connection with the server
-            //Socket socket = new Socket(serverAddr, mSERVER_PORT);
-            Socket socket = new Socket();
-            socket.connect(new InetSocketAddress(serverAddr, mSERVER_PORT), 1000);
+        socket = new Socket();
+        socket.connect(new InetSocketAddress(serverAddr, mSERVER_PORT), 1000);
+
+        mBufferOut = socket.getOutputStream();
+        mBufferIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    }
+
+    public void run() {
+        //in this while the client listens for the messages sent by the server
+        while (mRun) {
 
             try {
-
-                //sends the message to the server
-                mBufferOut = socket.getOutputStream();
-
-                //receives the message which the server sends back
-                mBufferIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-
-                //in this while the client listens for the messages sent by the server
-                while (mRun) {
-
-                    if(!mRun)mServerMessage = mBufferIn.readLine();
-
-                    if (mServerMessage != null && mMessageListener != null) {
-                        //call the method messageReceived from MyActivity class
-                        mMessageListener.messageReceived(mServerMessage);
-                    }
-
-                }
-
-                if(mServerMessage != null) Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + mServerMessage + "'");
-
-            } catch (Exception e) {
-
-                Log.e("TCP", "S: Error", e);
-
-            } finally {
-                //the socket must be closed. It is not possible to reconnect to this socket
-                // after it is closed, which means a new socket instance has to be created.
-                socket.close();
+                mServerMessage = mBufferIn.readLine();
+            } catch (IOException e) {
+                Log.e("TCP", "S: ReadLine Error", e);
+                mRun = false; // Exit loop on error
             }
 
-        } catch (Exception e) {
-
-            Log.e("TCP", "C: Error", e);
-
+            if (mServerMessage != null && mMessageListener != null) {
+                //call the method messageReceived from MyActivity class
+                mMessageListener.messageReceived(mServerMessage);
+            }
         }
+        if (mServerMessage != null)
+            Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + mServerMessage + "'");
 
     }
 
