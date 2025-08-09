@@ -1,23 +1,13 @@
 package de.alpharesearch.printer;
-
-import android.util.Base64;
 import android.util.Log;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
+import java.io.BufferedReader;;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
-import static android.util.Base64.decode;
 
 /**
  * Created by markus on 2/6/17.
