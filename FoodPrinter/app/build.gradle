@@ -6,14 +6,14 @@ android {
 
     }
     compileSdkVersion 36
-    buildToolsVersion '35.0.0'
+    buildToolsVersion '36.0.0'
     defaultConfig {
         applicationId "de.alpharesearch.printer"
         minSdkVersion 15
         targetSdkVersion 36
 
-        versionCode 12
-        versionName '1.0.12'
+        versionCode 14
+        versionName '1.0.14'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
@@ -30,6 +30,11 @@ dependencies {
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    testImplementation 'junit:junit:4.12'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    testImplementation 'junit:junit:4.13.2'
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
