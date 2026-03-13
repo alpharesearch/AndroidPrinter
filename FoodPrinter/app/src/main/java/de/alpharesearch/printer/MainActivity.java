@@ -60,17 +60,24 @@ public class MainActivity extends AppCompatActivity {
         int measurement;
         try {
             measurement = Integer.parseInt(editText_Measurement.getText().toString());
+            editText_Measurement.setError(null);
         } catch (NumberFormatException nfe) {
             Log.e(String.valueOf(R.string.Save), "trying to convert:" + editText_Measurement.getText().toString() + " to integer failed");
-            measurement = 0;
+            editText_Measurement.setError("Please enter a valid number");
+            editText_Measurement.requestFocus();
+            return false;
         }
         EditText editText_Servings = (EditText) this.findViewById(R.id.editText_Servings);
         int servings;
         try {
             servings = Integer.parseInt(editText_Servings.getText().toString());
+            if (servings <= 0) throw new NumberFormatException("must be positive");
+            editText_Servings.setError(null);
         } catch (NumberFormatException nfe) {
             Log.e(String.valueOf(R.string.Save), "trying to convert:" + editText_Servings.getText().toString() + " to integer failed");
-            servings = 1;
+            editText_Servings.setError("Please enter a valid positive number");
+            editText_Servings.requestFocus();
+            return false;
         }
         EditText editText_Dish = (EditText) this.findViewById(R.id.editTextName);
         EditText editText_Unit = (EditText) this.findViewById(R.id.editText_Unit);
@@ -104,7 +111,12 @@ public class MainActivity extends AppCompatActivity {
                 mTcpClient = new TcpClient(message -> handler.post(() -> {
                     //response received from server
                     Log.d("received", "response " + message);
-                    //process server response here....
+                    // Process server response here...
+                    
+                    // Stop the client after receiving a response (if it's a one-shot communication)
+                    if (mTcpClient != null) {
+                        mTcpClient.stopClient();
+                    }
                 }), ipAddress);
                 
                 // Connect to the server
@@ -117,12 +129,16 @@ public class MainActivity extends AppCompatActivity {
                     mTcpClient.sendMessage(print_this);
                 }
 
-                // Stop the client
+                // Start listening for responses (this normally blocks until mRun is false)
+                if (mTcpClient != null) {
+                    mTcpClient.run();
+                }
+
+            } catch (Exception e) {
+                Log.e("MainActivity", "Error in background task", e);
                 if (mTcpClient != null) {
                     mTcpClient.stopClient();
                 }
-            } catch (Exception e) {
-                Log.e("MainActivity", "Error in background task", e);
             }
         });
 

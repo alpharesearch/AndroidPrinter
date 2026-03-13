@@ -38,7 +38,11 @@ public class TcpClient {
         mMessageListener = listener;
         array = IPport.split(":");
         mSERVER_IP = array[0];
-        mSERVER_PORT = Integer.parseInt(array[1]);
+        if (array.length > 1) {
+            mSERVER_PORT = Integer.parseInt(array[1]);
+        } else {
+            mSERVER_PORT = 9100;
+        }
 
     }
 
