@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -28,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Find the toolbar view inside the activity layout
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             editText_Measurement.setError(null);
         } catch (NumberFormatException nfe) {
             Log.e(String.valueOf(R.string.Save), "trying to convert:" + editText_Measurement.getText().toString() + " to integer failed");
-            editText_Measurement.setError("Please enter a valid number");
+            editText_Measurement.setError(getString(R.string.error_valid_number));
             editText_Measurement.requestFocus();
             return false;
         }
@@ -75,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             editText_Servings.setError(null);
         } catch (NumberFormatException nfe) {
             Log.e(String.valueOf(R.string.Save), "trying to convert:" + editText_Servings.getText().toString() + " to integer failed");
-            editText_Servings.setError("Please enter a valid positive number");
+            editText_Servings.setError(getString(R.string.error_positive_number));
             editText_Servings.requestFocus();
             return false;
         }
@@ -111,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 mTcpClient = new TcpClient(message -> handler.post(() -> {
                     //response received from server
                     Log.d("received", "response " + message);
+                    Toast.makeText(MainActivity.this, R.string.print_success, Toast.LENGTH_SHORT).show();
                     // Process server response here...
                     
                     // Stop the client after receiving a response (if it's a one-shot communication)
@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 Log.e("MainActivity", "Error in background task", e);
+                handler.post(() -> Toast.makeText(MainActivity.this, R.string.print_failed, Toast.LENGTH_LONG).show());
                 if (mTcpClient != null) {
                     mTcpClient.stopClient();
                 }
@@ -147,26 +148,26 @@ public class MainActivity extends AppCompatActivity {
 
     private String MtextL(String A, String B, int L) {
 
-        String buf = "";
+        StringBuilder buf = new StringBuilder();
         L = L - B.length();
         if (L < 0) L = 0;
         for (int i = 0; i != L; i++) {
-            buf = buf + A;
+            buf.append(A);
         }
-        buf = buf + B;
-        return buf;
+        buf.append(B);
+        return buf.toString();
     }
 
     private String MtextR(String A, String B, int L) {
 
-        String buf = "";
+        StringBuilder buf = new StringBuilder();
         L = L - B.length();
         if (L < 0) L = 0;
-        buf = buf + B;
+        buf.append(B);
         for (int i = 0; i != L; i++) {
-            buf = buf + A;
+            buf.append(A);
         }
-        return buf;
+        return buf.toString();
     }
 
     public void SaveIP(View v) {

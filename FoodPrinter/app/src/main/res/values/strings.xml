@@ -12,4 +12,8 @@
     <string name="Print">Print</string>
     <string name="Name">Dish</string>
     <string name="Date">Date:</string>
+    <string name="error_valid_number">Please enter a valid number</string>
+    <string name="error_positive_number">Please enter a valid positive number</string>
+    <string name="print_success">Print job sent successfully</string>
+    <string name="print_failed">Failed to connect to printer</string>
 </resources>
