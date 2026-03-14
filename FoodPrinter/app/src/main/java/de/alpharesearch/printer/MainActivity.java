@@ -110,13 +110,6 @@ public class MainActivity extends AppCompatActivity {
                 mTcpClient = new TcpClient(message -> handler.post(() -> {
                     //response received from server
                     Log.d("received", "response " + message);
-                    Toast.makeText(MainActivity.this, R.string.print_success, Toast.LENGTH_SHORT).show();
-                    // Process server response here...
-                    
-                    // Stop the client after receiving a response (if it's a one-shot communication)
-                    if (mTcpClient != null) {
-                        mTcpClient.stopClient();
-                    }
                 }), ipAddress);
                 
                 // Connect to the server
@@ -127,16 +120,13 @@ public class MainActivity extends AppCompatActivity {
                 // Send the message
                 if (mTcpClient != null) {
                     mTcpClient.sendMessage(print_this);
-                }
-
-                // Start listening for responses (this normally blocks until mRun is false)
-                if (mTcpClient != null) {
-                    mTcpClient.run();
+                    handler.post(() -> Toast.makeText(MainActivity.this, R.string.print_success, Toast.LENGTH_SHORT).show());
                 }
 
             } catch (Exception e) {
                 Log.e("MainActivity", "Error in background task", e);
                 handler.post(() -> Toast.makeText(MainActivity.this, R.string.print_failed, Toast.LENGTH_LONG).show());
+            } finally {
                 if (mTcpClient != null) {
                     mTcpClient.stopClient();
                 }
