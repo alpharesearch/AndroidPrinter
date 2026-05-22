@@ -14,14 +14,14 @@ android {
         minSdkVersion 25
         targetSdkVersion 36
 
-        versionCode 15
-        versionName '1.0.15'
+        versionCode 17
+        versionName '1.0.17'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
             // You can add debug-specific configurations here if needed

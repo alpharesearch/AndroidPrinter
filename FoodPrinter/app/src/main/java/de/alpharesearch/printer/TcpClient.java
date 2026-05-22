@@ -102,6 +102,7 @@ public class TcpClient {
 
         socket = new Socket();
         socket.connect(new InetSocketAddress(serverAddr, mSERVER_PORT), 1000);
+        socket.setSoTimeout(5000);
 
         mBufferOut = socket.getOutputStream();
         mBufferIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));

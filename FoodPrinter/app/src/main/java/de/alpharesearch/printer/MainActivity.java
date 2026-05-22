@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -54,22 +55,14 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean Print(MenuItem item) {
         EditText editTextIP = (EditText) this.findViewById(R.id.editTextIP);
-        String ipAddress = editTextIP.getText().toString().trim();
-        if (ipAddress.isEmpty()) {
-            editTextIP.setError("Please enter a valid IP address");
-            editTextIP.requestFocus();
-            return false;
-        }
-
         EditText editText_Measurement = (EditText) this.findViewById(R.id.editText_Size);
         int measurement;
         try {
             measurement = Integer.parseInt(editText_Measurement.getText().toString());
-            if (measurement <= 0) throw new NumberFormatException("must be positive");
             editText_Measurement.setError(null);
         } catch (NumberFormatException nfe) {
             Log.e(String.valueOf(R.string.Save), "trying to convert:" + editText_Measurement.getText().toString() + " to integer failed");
-            editText_Measurement.setError("Please enter a valid positive number");
+            editText_Measurement.setError(getString(R.string.error_valid_number));
             editText_Measurement.requestFocus();
             return false;
         }
@@ -81,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             editText_Servings.setError(null);
         } catch (NumberFormatException nfe) {
             Log.e(String.valueOf(R.string.Save), "trying to convert:" + editText_Servings.getText().toString() + " to integer failed");
-            editText_Servings.setError("Please enter a valid positive number");
+            editText_Servings.setError(getString(R.string.error_positive_number));
             editText_Servings.requestFocus();
             return false;
         }
@@ -105,23 +98,18 @@ public class MainActivity extends AppCompatActivity {
                 + "├" + MtextL("─", "", 30) + "┤\n"
                 + "│ " + getString(R.string.Servings) + ":" + MtextL(" ", Integer.toString(servings), 27 - getString(R.string.Servings).length()) + " │\n"
                 + "├" + MtextL("─", "", 30) + "┤\n"
-                + "│ " + getString(R.string.Portion_Size) + ":" + MtextL(" ", Integer.toString(measurement / servings) + editText_Unit.getText().toString(), 27 - getString(R.string.Portion_Size).length()) + " │\n"
+                + "│ " + getString(R.string.Portion_Size) + ":" + MtextL(" ", "", 27 - getString(R.string.Portion_Size).length() - Integer.toString(measurement / servings).length() - editText_Unit.getText().toString().length()) + Integer.toString((measurement / servings)) + editText_Unit.getText().toString() + " │\n"
                 + "└" + MtextL("─", "", 30) + "┘\n"
                 + "" + getString(R.string.Comment) + ":\n" + editText_Comment.getText().toString() + "\n"
                 + "\n\n\n\n\n\n";
 
         mTextView_Preview.setText(print_this.replaceAll("[┌─┐│┤├┘└]", ""));
+        String ipAddress = editTextIP.getText().toString();
         executorService.execute(() -> {
             try {
                 mTcpClient = new TcpClient(message -> handler.post(() -> {
                     //response received from server
                     Log.d("received", "response " + message);
-                    // Process server response here...
-                    
-                    // Stop the client after receiving a response (if it's a one-shot communication)
-                    if (mTcpClient != null) {
-                        mTcpClient.stopClient();
-                    }
                 }), ipAddress);
                 
                 // Connect to the server
@@ -132,15 +120,13 @@ public class MainActivity extends AppCompatActivity {
                 // Send the message
                 if (mTcpClient != null) {
                     mTcpClient.sendMessage(print_this);
-                }
-
-                // Start listening for responses (this normally blocks until mRun is false)
-                if (mTcpClient != null) {
-                    mTcpClient.run();
+                    handler.post(() -> Toast.makeText(MainActivity.this, R.string.print_success, Toast.LENGTH_SHORT).show());
                 }
 
             } catch (Exception e) {
                 Log.e("MainActivity", "Error in background task", e);
+                handler.post(() -> Toast.makeText(MainActivity.this, R.string.print_failed, Toast.LENGTH_LONG).show());
+            } finally {
                 if (mTcpClient != null) {
                     mTcpClient.stopClient();
                 }
@@ -152,26 +138,26 @@ public class MainActivity extends AppCompatActivity {
 
     private String MtextL(String A, String B, int L) {
 
-        String buf = "";
+        StringBuilder buf = new StringBuilder();
         L = L - B.length();
         if (L < 0) L = 0;
         for (int i = 0; i != L; i++) {
-            buf = buf + A;
+            buf.append(A);
         }
-        buf = buf + B;
-        return buf;
+        buf.append(B);
+        return buf.toString();
     }
 
     private String MtextR(String A, String B, int L) {
 
-        String buf = "";
+        StringBuilder buf = new StringBuilder();
         L = L - B.length();
         if (L < 0) L = 0;
-        buf = buf + B;
+        buf.append(B);
         for (int i = 0; i != L; i++) {
-            buf = buf + A;
+            buf.append(A);
         }
-        return buf;
+        return buf.toString();
     }
 
     public void SaveIP(View v) {
