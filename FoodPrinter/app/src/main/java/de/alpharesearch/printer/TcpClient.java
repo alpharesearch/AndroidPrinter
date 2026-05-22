@@ -22,7 +22,7 @@ public class TcpClient {
     // sends message received notifications
     private OnMessageReceived mMessageListener = null;
     // while this is true, the server will continue running
-    private boolean mRun = false;
+    private volatile boolean mRun = false;
     // used to send messages
     private OutputStream mBufferOut;
     // used to read messages from the server
@@ -90,10 +90,6 @@ public class TcpClient {
                 Log.e("TCP", "C: Error closing socket", e);
             }
         }
-        mMessageListener = null;
-        mBufferIn = null;
-        mBufferOut = null;
-        mServerMessage = null;
         Log.e("TCP Client", "C: Closed...");
     }
 
@@ -117,6 +113,9 @@ public class TcpClient {
 
             try {
                 mServerMessage = mBufferIn.readLine();
+                if (mServerMessage == null) {
+                    mRun = false; // Exit loop on EOF/disconnect
+                }
             } catch (IOException e) {
                 Log.e("TCP", "S: ReadLine Error", e);
                 mRun = false; // Exit loop on error

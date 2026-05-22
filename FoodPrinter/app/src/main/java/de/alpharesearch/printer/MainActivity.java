@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Find the toolbar view inside the activity layout
@@ -56,14 +54,22 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean Print(MenuItem item) {
         EditText editTextIP = (EditText) this.findViewById(R.id.editTextIP);
+        String ipAddress = editTextIP.getText().toString().trim();
+        if (ipAddress.isEmpty()) {
+            editTextIP.setError("Please enter a valid IP address");
+            editTextIP.requestFocus();
+            return false;
+        }
+
         EditText editText_Measurement = (EditText) this.findViewById(R.id.editText_Size);
         int measurement;
         try {
             measurement = Integer.parseInt(editText_Measurement.getText().toString());
+            if (measurement <= 0) throw new NumberFormatException("must be positive");
             editText_Measurement.setError(null);
         } catch (NumberFormatException nfe) {
             Log.e(String.valueOf(R.string.Save), "trying to convert:" + editText_Measurement.getText().toString() + " to integer failed");
-            editText_Measurement.setError("Please enter a valid number");
+            editText_Measurement.setError("Please enter a valid positive number");
             editText_Measurement.requestFocus();
             return false;
         }
@@ -99,13 +105,12 @@ public class MainActivity extends AppCompatActivity {
                 + "├" + MtextL("─", "", 30) + "┤\n"
                 + "│ " + getString(R.string.Servings) + ":" + MtextL(" ", Integer.toString(servings), 27 - getString(R.string.Servings).length()) + " │\n"
                 + "├" + MtextL("─", "", 30) + "┤\n"
-                + "│ " + getString(R.string.Portion_Size) + ":" + MtextL(" ", "", 27 - getString(R.string.Portion_Size).length() - Integer.toString(measurement / servings).length() - editText_Unit.getText().toString().length()) + Integer.toString((measurement / servings)) + editText_Unit.getText().toString() + " │\n"
+                + "│ " + getString(R.string.Portion_Size) + ":" + MtextL(" ", Integer.toString(measurement / servings) + editText_Unit.getText().toString(), 27 - getString(R.string.Portion_Size).length()) + " │\n"
                 + "└" + MtextL("─", "", 30) + "┘\n"
                 + "" + getString(R.string.Comment) + ":\n" + editText_Comment.getText().toString() + "\n"
                 + "\n\n\n\n\n\n";
 
         mTextView_Preview.setText(print_this.replaceAll("[┌─┐│┤├┘└]", ""));
-        String ipAddress = editTextIP.getText().toString();
         executorService.execute(() -> {
             try {
                 mTcpClient = new TcpClient(message -> handler.post(() -> {
